@@ -13,7 +13,7 @@ class FangjiaPipeline(object):
     def process_item(self, item, spider):
         return item
 class Csv_writer_Pipeline(object):
-    time_stamp = "%Y_%m_%d_%H_%M_%S"
+    time_stamp = "%Y_%m_%d"
     content = ['FANGJIA_ADDRESS',\
     'FANGJIA_HEIGHIT',\
     'FANGJIA_NAME',\
@@ -27,7 +27,7 @@ class Csv_writer_Pipeline(object):
     'FANGJIA_BROKERTEL']
     def __init__(self):
         self.filename = 'ershoufang_{0}.csv'.format(datetime.datetime.now().strftime(self.time_stamp))
-        self.file_obj = open(self.filename,'ab')
+        self.file_obj = open(self.filename,'w')
         self.file_obj.write(codecs.BOM_UTF8)
         self.writer = csv.writer(self.file_obj)
         self.writer.writerow([' ',\
@@ -44,16 +44,17 @@ class Csv_writer_Pipeline(object):
             '经纪人联系方式'])
 
     def process_item(self, item, spider):
-        self.writer.writerow([' ',\
-            item[self.content[0]],\
-            item[self.content[1]],\
-            item[self.content[2]],\
-            item[self.content[3]],\
-            item[self.content[4]],\
-            item[self.content[5]],\
-            item[self.content[6]],\
-            item[self.content[7]],\
-            item[self.content[8]],\
-            item[self.content[9]],\
-            item[self.content[10]]])
+        if len(item) > 0 :
+            self.writer.writerow([' ',\
+                item[self.content[0]],\
+                item[self.content[1]],\
+                item[self.content[2]],\
+                item[self.content[3]],\
+                item[self.content[4]],\
+                item[self.content[5]],\
+                item[self.content[6]],\
+                item[self.content[7]],\
+                item[self.content[8]],\
+                item[self.content[9]],\
+                item[self.content[10]]])
         return item
