@@ -38,7 +38,6 @@ class fangjiaSpider(scrapy.Spider):
 
     def parse_fangjia(self, response):   # /是在根节点找(只找根节点下面一层,绝对) //是在根节点下面的所有节点找,相对
         info = []
-        info_mid = []
         info_end = []
         item = FangjiaItem()
         broker_name = response.xpath('//p[@class="brokerInfo"]/text()').extract()[0]
@@ -89,27 +88,26 @@ class fangjiaSpider(scrapy.Spider):
                         '阎良'.decode('utf-8'),\
                         '周至'.decode('utf-8'),\
                         '西安周边'.decode('utf-8')]
-        for i_info in info:
-            i_info = i_info.decode('utf-8')
-            if ' ' in i_info:
-                str1 = re.sub(' ','',i_info)
-                i_info = str1
-            if  '\n' in  i_info:
-                str2 = re.sub('\n','',i_info)
-                i_info = str2
-            if   '\t' in i_info:
-                str3 = re.sub('\t','',i_info)
-                i_info = str3
-            print i_info
-            info_mid.append(i_info)
         flag = 0
         for  filter_it in filters_tab:
-            if filter_it in info_mid[0]:
+            if filter_it in info[0]:
                 flag = 1
-        if flag:
-            info_end = []
+        if  not flag:
+            for i_info in info:
+                i_info = i_info.decode('utf-8')
+                if ' ' in i_info:
+                    str1 = re.sub(' ','',i_info)
+                    i_info = str1
+                if  '\n' in  i_info:
+                    str2 = re.sub('\n','',i_info)
+                    i_info = str2
+                if   '\t' in i_info:
+                    str3 = re.sub('\t','',i_info)
+                    i_info = str3
+                info_end.append(i_info)
+                print i_info
         else:
-            info_end = info_mid[:]
+            pass
         if len(info_end) > 0 :
             item['FANGJIA_ADDRESS'] = info_end[0]
             item['FANGJIA_HEIGHIT'] = info_end[1]
